@@ -1,0 +1,42 @@
+{
+  "name": "@m9ch/pumpkin",
+  "version": "0.1.0-alpha.0",
+  "description": "A SHIELD for pinia & Vue3",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "source": "./src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup ./src/index.ts",
+    "test": "vitest",
+    "prepublishOnly": "rimraf ./dist && pnpm build"
+  },
+  "dependencies": {
+    "pinia": "^2.0.14",
+    "vue": "^3.2.33"
+  },
+  "devDependencies": {
+    "rimraf": "^3.0.2"
+  },
+  "tsup": {
+    "format": [
+      "cjs",
+      "esm"
+    ],
+    "dts": true,
+    "clean": true
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
