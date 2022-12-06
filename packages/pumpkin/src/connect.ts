@@ -1,17 +1,20 @@
 import { getActivePinia } from 'pinia'
-import type { DefineComponent } from 'vue'
-import { computed, defineComponent, h, unref } from 'vue'
+import type { DefineComponent as ComponentType, SetupContext } from 'vue'
+import { h, unref } from 'vue'
 import { useDispatch } from './dispatch'
 
-export const connect = (mapToProps: (state: any) => any) => (Component: DefineComponent) => defineComponent((props) => {
-  const { state } = getActivePinia() ?? {}
-  const dispatch = useDispatch()
-  const computedProps = computed(() => ({
-    ...mapToProps(unref(state)),
-    ...props,
+export type Action<T, S = any> = (state: S) => T
 
-    dispatch,
-  }))
+export function connect<T = unknown>(mapToProps: Action<T>) {
+  return <P = any>(Component: ComponentType<P>) => function (props: P, context: SetupContext) {
+    const { state } = getActivePinia() ?? {}
+    const dispatch = useDispatch()
 
-  return () => h(Component, computedProps.value)
-})
+    const componentProps = {
+      ...mapToProps(unref(state)),
+      ...props,
+    }
+
+    return h(Component, { ...componentProps, dispatch }, context.slots)
+  }
+}
