@@ -1,6 +1,6 @@
 {
   "name": "@m9ch/pumpkin",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "A SHIELD for pinia & Vue3",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -29,7 +29,9 @@
     "rimraf": "^3.0.2"
   },
   "tsup": {
-    "entry": ["./src/index.ts"],
+    "entry": [
+      "./src/index.ts"
+    ],
     "format": [
       "cjs",
       "esm"
