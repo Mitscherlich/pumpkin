@@ -17,7 +17,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup ./src/index.ts",
+    "build": "tsup",
     "test": "vitest",
     "prepublishOnly": "rimraf ./dist && pnpm build"
   },
@@ -29,12 +29,14 @@
     "rimraf": "^3.0.2"
   },
   "tsup": {
+    "entry": ["./src/index.ts"],
     "format": [
       "cjs",
       "esm"
     ],
     "dts": true,
-    "clean": true
+    "clean": true,
+    "target": "es5"
   },
   "publishConfig": {
     "access": "public"
