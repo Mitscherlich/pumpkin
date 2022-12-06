@@ -1,5 +1,6 @@
-import { getActivePinia } from "pinia";
-import { computed, defineComponent, DefineComponent, h, unref } from "vue";
+import { getActivePinia } from 'pinia'
+import type { DefineComponent } from 'vue'
+import { computed, defineComponent, h, unref } from 'vue'
 import { useDispatch } from './dispatch'
 
 export const connect = (mapToProps: (state: any) => any) => (Component: DefineComponent) => defineComponent((props) => {

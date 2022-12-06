@@ -1,7 +1,8 @@
-import type { Component, Plugin, InjectionKey } from 'vue'
+import type { Component, InjectionKey, Plugin } from 'vue'
 import { createApp, inject } from 'vue'
+import type { StateTree } from 'pinia'
 import { createPinia, defineStore as defineModel } from 'pinia'
-import type { IModelDefs, IModel } from './types'
+import type { IModel, IModelDefs } from './types'
 
 export const __pumpkin_model_key__: InjectionKey<Map<string, IModel<any>>> = Symbol('pumpkin#model')
 
@@ -13,11 +14,11 @@ export const createPumpkin = (App: Component) => {
 
   app.provide(__pumpkin_model_key__, models)
 
-  const model = <S = any, G = {}, A = {}>({ namespace, ...modelDefs }: IModelDefs<S, G, A>): IModel<S, G, A> => {
+  const model = <S extends StateTree = any, G = {}, A = {}>({ namespace, ...modelDefs }: IModelDefs<S, G, A>): IModel<S, G, A> => {
     if (models.has(namespace)) {
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV === 'development')
         console.warn(`[🎃 pumpkin] model ${namespace} is already exist. If you'd like to replace it, please use 'replaceModel' instead.`)
-      }
+
       return models.get(namespace)
     }
 
@@ -25,31 +26,29 @@ export const createPumpkin = (App: Component) => {
 
     const instance = useModel()
 
-    if (!models.has(namespace)) {
+    if (!models.has(namespace))
       models.set(namespace, instance)
-    }
 
     return instance as IModel<S, G, A>
   }
 
   const unmodel = (namespace: string) => {
     if (!models.has(namespace)) {
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV === 'development')
         console.warn(`[🎃 pumpkin] model ${namespace} is not exist.`)
-      }
+
       return
     }
 
     const instance = models.get(namespace)
 
-    if (instance) {
+    if (instance)
       instance.$dispose()
-    }
 
     models.delete(namespace)
   }
 
-  const replaceModel = <S = any, G = {}, A = {}>(namespace: string, modelDefs: Omit<IModelDefs<S, G, A>, 'namespace'>) => {
+  const replaceModel = <S extends StateTree = any, G = {}, A = {}>(namespace: string, modelDefs: Omit<IModelDefs<S, G, A>, 'namespace'>) => {
     unmodel(namespace)
     model({ namespace, ...modelDefs })
   }
